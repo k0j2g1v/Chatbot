@@ -11,7 +11,7 @@ def home():
 
 @app.route('/name')
 def name():
-    return "최재범"
+    return "홍길동"
 
 @app.route('/hello/<name>')
 def hello(name):
