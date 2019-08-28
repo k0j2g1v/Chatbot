@@ -1,5 +1,6 @@
 from flask import Flask
 import random
+import requests
 
 app = Flask(__name__)
 @app.route("/")
@@ -32,9 +33,15 @@ def menu():
     return food
 
 @app.route('/lotto')
-def lotto():
-    winner = [3, 5, 12, 13, 33, 39]
-    result = random.sample(range(1,46),6) #비복원 무작위 추출
+def lotto():    
+
+    # 1. requests 통해 요청 보내기
+    # requests.get('주소')
+    url = 'https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=873'
+    response = requests.get(url)
+    #print(response.text)
+    winner = response.json()
+    result = random.sample(range(1,46),6) #비복원 무작위 추출    
     
     #random.sample(리스트/튜플, 뽑을갯수)
     #print(type(result)) 타입확인
@@ -47,9 +54,14 @@ def lotto():
     # -> 4등
     # 만약 3개가 일치하면
     # -> 5등
-    count = len(set(winner) & set(result))
+    
     # => {3, 5, 12}
+    num_list = []
+    for  i in range(1,7):
+        num_list.append(winner['drwtNo'+str(i)])
+    print(num_list)
 
+    count = len(set(winner) & set(result))
     # for num in result:
     #     if num in winner:
     #         count+=1
